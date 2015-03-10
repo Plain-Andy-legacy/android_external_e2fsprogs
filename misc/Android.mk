@@ -164,6 +164,17 @@ tune2fs_shared_libraries := \
 
 tune2fs_system_shared_libraries := libc
 
+
+tune2fs_static_libraries := \
+	libext2_com_err \
+	libext2_blkid \
+	libext2_quota \
+	libext2_uuid_static \
+	libext2_e2p \
+	libext2fs
+
+tune2fs_system_static_libraries := libc
+
 include $(CLEAR_VARS)
 
 LOCAL_SRC_FILES := $(tune2fs_src_files)
@@ -181,6 +192,15 @@ include $(CLEAR_VARS)
 LOCAL_SRC_FILES := $(tune2fs_src_files)
 LOCAL_C_INCLUDES := $(tune2fs_c_includes)
 LOCAL_CFLAGS := $(tune2fs_cflags)
+LOCAL_STATIC_LIBRARIES := $(tune2fs_static_libraries) $(tune2fs_system_static_libraries)
+LOCAL_FORCE_STATIC_EXECUTABLE := true
+LOCAL_MODULE := tune2fs_static
+LOCAL_MODULE_TAGS := optional
+
+include $(BUILD_EXECUTABLE)
+
+include $(CLEAR_VARS)
+
 LOCAL_STATIC_LIBRARIES := $(tune2fs_shared_libraries) $(tune2fs_system_shared_libraries) libext2fs
 LOCAL_MODULE := utility_tune2fs
 LOCAL_MODULE_TAGS := optional
@@ -194,8 +214,6 @@ include $(BUILD_EXECUTABLE)
 
 include $(CLEAR_VARS)
 
-LOCAL_SRC_FILES := $(tune2fs_src_files)
-LOCAL_C_INCLUDES := $(tune2fs_c_includes)
 LOCAL_CFLAGS := $(tune2fs_cflags)
 LOCAL_STATIC_LIBRARIES := $(tune2fs_shared_libraries) $(tune2fs_system_shared_libraries) libext2fs
 LOCAL_MODULE := recovery_tune2fs
@@ -207,6 +225,17 @@ LOCAL_MODULE_STEM := tune2fs
 LOCAL_FORCE_STATIC_EXECUTABLE := true
 
 include $(BUILD_EXECUTABLE)
+
+include $(CLEAR_VARS)
+
+LOCAL_SRC_FILES := $(tune2fs_src_files)
+LOCAL_C_INCLUDES := $(tune2fs_c_includes)
+LOCAL_CFLAGS := $(tune2fs_cflags) -DBUILD_AS_LIB
+LOCAL_STATIC_LIBRARIES := $(tune2fs_static_libraries) $(tune2fs_system_static_libraries)
+LOCAL_MODULE := libtune2fs
+LOCAL_MODULE_TAGS := optional
+
+include $(BUILD_STATIC_LIBRARY)
 
 include $(CLEAR_VARS)
 
